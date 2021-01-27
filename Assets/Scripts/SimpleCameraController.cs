@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.UI;
 
 namespace UnityTemplateProjects
 {
@@ -72,6 +73,7 @@ namespace UnityTemplateProjects
         [Tooltip("Whether or not to invert our Y axis for mouse input to rotation.")]
         public bool invertY = false;
         public PostProcessVolume volume;
+        public Slider focalLength;
 
         void OnEnable()
         {
@@ -79,10 +81,15 @@ namespace UnityTemplateProjects
             m_InterpolatingCameraState.SetFromTransform(transform);
         }
 
-        // void Start(){
-            
-        // }
-
+        void Start(){
+            focalLength.onValueChanged.AddListener(focusDistanceUpdate);
+        }
+        public void focusDistanceUpdate(float value){
+            Debug.Log(value);
+            DepthOfField depthOfField;
+            volume.profile.TryGetSettings(out depthOfField);
+            depthOfField.focusDistance.value = value;
+        }
         Vector3 GetInputTranslationDirection()
         {
             Vector3 direction = new Vector3();
